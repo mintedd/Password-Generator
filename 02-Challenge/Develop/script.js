@@ -1,83 +1,94 @@
 // Assignment Code
-var generateBtn = document.querySelector("#generate"); //DOM Element
-// console.log(generateBtn) called for generateBtn to see what we were working with
-//so this variable will give us interactive abilities with the Generate Password button
+var generateBtn = document.querySelector("#generate");
 
-generateBtn.addEventListener("click", writePassword); //when the button is clicked it will generate the password
+var lowercase = ["a","b","c","d","e","f","g","h","i","j","k","l","m","n","o","p","q","r","s","t","u","v","w","x","y","z"];
+var uppercase = ['A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z'];
+var special = ["!", "@", "#", "$", "%", "^", "&", "*", "~"];
+var numberInt = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9,];
+
+//Step 1: defining passwordCriteria because it is being called in the generatePassword function declaration 
+function passwordCriterias() {
+    var userInput = parseInt(prompt("How many characters would you like your password to be"))
+        if (isNaN(userInput) || userInput < 8 || userInput > 128) {
+            window.alert("Password length has to be a number, and 8-128 characters. Please try again");
+            return null;
+        }//if the value entered is not a number or less than 8 or less than 128 null - try again 
+
+        var hasLowercase = confirm("Would you like lowercase letters?")
+        var hasUppercase = confirm("Would you like uppercase letters?")
+        var hasSpecial = confirm("Would you like special characters?")
+        var hasNumberInt = confirm("Would you like numbers?")
+
+        if (hasLowercase === false && hasUppercase === false && hasSpecial === false && hasNumberInt === false) {
+            window.alert("Must pick at least 1 criteria");
+            return null;
+        } //if user enters no for all of the criterias - null must try again because they must select at least one
+
+        //still confused on whats going on here
+        var passwordOptions = {
+            userInput: userInput,
+            hasLowercase: hasLowercase,
+            hasUppercase: hasUppercase,
+            hasSpecial: hasSpecial,
+            hasNumberInt: hasNumberInt,
+        }
+        return passwordOptions;
+}
+function randomizer(arr) { //arr is just a placeholder, 
+    var randomIndex = Math.floor(Math.random() * arr.length)
+    var randomElement = arr[randomIndex]
+    console.log(randomElement)
+    return randomElement
+}
+
+function generatePassword() {
+    var options = passwordCriterias(); //passwordCriteria is being called but has not been defined so need to define (line 10)
+    //var options are the choices you selected in the password criteria function 
+    var choiceArr = [];
+    var possibleArr = []; //all the choices var lower, upper, special, and numberInt
+    var resultArr = [];
+
+    //if user confirmed yes to these choices then the lowercase,uppercase,special, and numberInt array will be concatenated/added to the possible array 
+    if (options.hasLowercase) {
+        possibleArr = possibleArr.concat(lowercase)
+        choiceArr.push(randomizer(lowercase))
+        //a random letter will be chosen from the lowercase array and will be added to the choiceArr
+    }
+    if (options.hasUppercase) {
+        possibleArr = possibleArr.concat(uppercase)
+        choiceArr.push(randomizer(uppercase))
+    }
+    if (options.hasSpecial) {
+        possibleArr = possibleArr.concat(special)
+        choiceArr.push(randomizer(special))
+    }
+    if (options.hasNumberInt) {
+        possibleArr = possibleArr.concat(numberInt)
+        choiceArr.push(randomizer(numberInt))
+    }
+
+    //create a for loop options.length
+    for (let i = 0; i < options.length; i++) {
+        var possibleChar = randomizer(possibleArr)
+        resultArr.push(possibleChar)
+    }
+
+    for (let i = 0; i < choiceArr.length; i++) {
+        resultArr[i]=choiceArr[i]
+        return resultArr.join("")
+
+    }
+    // for some reason it is only giving me on 1 string value...
+}
 
 // Write password to the #password input
 function writePassword() {
-  var correctPrompts = prompts(); //this returns true or false
-  var passwordText = document.querySelector("#password");
-
-  if (correctPrompts) {
     var password = generatePassword();
-    passwordText.value = password;
-  }
-}
-//Generate Password
-function generatePassword() {
-  var password = ""
-  for (i = 0; i < choiceArr.length; i++) {
-    return passwordText
-  }
-}
-//Criterias - //alphabet and special characters - so you could either write the entire of letters in the array OR use the charcode() https://www.asciitable.com/
-//for charCode you are going to need to mathFloor(mathRandom)
-//Method - if i was going to do the array list all way
-//Upper toLowerCase the array
-//Lower toUpperCase the array 
-function getRandomUpper() {
-  return String.fromCharCode(Math.floor(Math.random() * 26) + 65);
-}
-function getRandomLower() {
-  return String.fromCharCode(Math.floor(Math.random() * 26) + 97);
+    var passwordText = document.querySelector("#password"); //here is where the random password will be shown
+
+    passwordText.value = password; //.value will return the array
+
 }
 
-function getRandomNumber() {
-  return String.fromCharCode(Math.floor(Math.random() * 10) + 48);
-}
-
-function getRandomSymbol() {
-  const symbols = "!@#$%^&*()_+<>?"
-  return symbols[Math.floor(Math.random() * symbols.length)];
-}
-
-//Prompt
-function prompts() {
-  choiceArr = [];
-  var userInput = window.prompt("How many characters would you like your password to be");
-
-  var passwordLength = parseInt(userInput)
-  //parseInt turns the number("string") that the user entered into a number value/integer
-
-  if (isNaN(passwordLength) || passwordLength < 8 || passwordLength > 128) {//now i need to create a min max value 
-    window.alert("Password length has to be a number, and 8-128 characters. Please try again");
-    return false;
-  }//if the value entered is not a number - isNaN
-
-  if (confirm("Would you like lowercase letters?")) {
-    choiceArr = choiceArr.concat(getRandomLower);
-  }
-  if (confirm("Would you like uppercase letters?")) {
-    choiceArr = choiceArr.concat(getRandomUpper);
-  }
-  if (confirm("Would you like a number?")) {
-    choiceArr = choiceArr.concat(getRandomNumber);
-  }
-  if (confirm("Would you like a special character?")) {
-    choiceArr = choiceArr.concat(getRandomSymbol)
-  }
-  return true;
-}
-
-
-//Step 1:
-//work backwards
-//addEventListener has not been defined
-
-//Step 2: 
-//generarePassword in the writePassword function has not been defined 
-
-//is document.querySelector("#generate") different from document.querySelector("#password");
-  //looks for the #generate and #passwork in markup
+// Add event listener to generate button
+generateBtn.addEventListener("click", writePassword);
