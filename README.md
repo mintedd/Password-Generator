@@ -34,4 +34,4 @@ THEN the password is either displayed in an alert or written to the page
 
 [Website](https://minted.github.io/password-generator/)
 
-![alt text] 
+![alt text](./Assets/Screen%20Shot%202022-10-17%20at%2011.57.35%20AM.png)
